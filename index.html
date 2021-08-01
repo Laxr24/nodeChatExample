@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/w3.css">
+  <title>Document</title>
+</head>
+<body>
+  <ul id="messages" class="w3-ul w3-center" style="width: 50%;margin: 0 auto;"></ul>
+    <form action="" class="w3-form w3-panel w3-center">
+      <input id="m" autocomplete="off" class="w3-input" style="width: 50%;margin: 0 auto;"/>
+      <br>
+      <button class="w3-btn w3-green ">Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script >
+      var socket = io();
+      $('form').submit(function(e){
+      e.preventDefault(); // prevents page reloading
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+      });
+      socket.on('new user', ()=>{
+          $('#messages').append($('<li class="w3-green">').text('Someone new joined'));  
+
+      } );
+      socket.on('chat message', function(msg){
+      $('#messages').append($('<li>').text(msg));
+      });
+
+      socket.on('user left', ()=>{
+          $('#messages').append($('<li>').text('1 User left'));  
+      });
+    </script>
+</body>
+</html>
